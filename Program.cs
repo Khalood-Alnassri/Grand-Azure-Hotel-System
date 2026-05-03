@@ -55,6 +55,85 @@ namespace Grand_Azure_Hotel_System
             hotil.AddGuest(name, id);
         }
 
+        // case 2: function to add new room
+        public static void AddRoom()
+        {
+            Console.WriteLine("Enter room number: ");
+            int number = int.Parse(Console.ReadLine() ?? string.Empty);
+
+            Console.WriteLine("Enter room type: ");
+            string type = Console.ReadLine();
+
+            hotil.AddRoom(number, type);
+        }
+
+        // case 3: function to book a room
+        public static void BookRoom()
+        {
+            Console.WriteLine("Enter room number: ");
+            int roomNumber = int.Parse(Console.ReadLine() ?? string.Empty)
+                ;
+            Console.WriteLine("Enter guest national ID: ");
+            string guestID = Console.ReadLine();
+
+            hotil.BookRoom(roomNumber, guestID);
+        }
+
+        // case 4: function to cancel a booking
+        public static void CancelBooking()
+        {
+            Console.WriteLine("Enter booking ID: ");
+            int bookingID = int.Parse(Console.ReadLine() ?? string.Empty);
+
+            hotil.CancelBooking(bookingID);
+        }
+
+        // case 5: function to display available rooms
+        public static void DisplayAvailableRooms()
+        {
+            hotil.DisplayAvailableRooms();
+        }
+
+        // case 6: function to display booked rooms
+        public static void DisplayBookedRooms()
+        {
+            hotil.DisplayBookedRooms();
+        }
+
+        // case 7: function to search guest booking by national ID
+        public static void SearchGuestBooking()
+        {
+            Console.WriteLine("Enter guest national ID: ");
+            string guestID = Console.ReadLine();
+
+            hotil.SearchGuestBooking(guestID);
+        }
+
+        // case 8: function to display hotel statistics
+        public static void DisplayStatistics()
+        {
+            hotil.DisplayStatistics();
+        }
+
+        // case 9: function to exit the program
+        public static bool Exit()
+        {
+            Console.WriteLine("Are you sure you want to exit? (yes/no): ");
+            string confirmExit = Console.ReadLine() ?? string.Empty;
+
+            if (confirmExit == "yes")
+            {
+                Console.WriteLine("Exiting system...");
+                Console.WriteLine("Thank you for using the Healthcare Management System!");
+                return true;
+            }
+
+            else
+            {
+                Console.WriteLine("Returning to menu...");
+                return false;
+            }
+        }
 
         static void Main(string[] args)
         {
@@ -73,27 +152,50 @@ namespace Grand_Azure_Hotel_System
                         break;
 
                     case 2:
+
+                        AddRoom();
+
                         break;
 
                     case 3:
+
+                        BookRoom();
+
                         break;
 
                     case 4:
+
+                        CancelBooking();
+
                         break;
 
                     case 5:
+
+                        DisplayAvailableRooms();
+
                         break;
 
                     case 6:
+
+                        DisplayBookedRooms();
+
                         break;
 
                     case 7:
+
+                        SearchGuestBooking();
+
                         break;
 
                     case 8:
+
+                        DisplayStatistics();
+
                         break;
 
                     case 9:
+
+                        exit = Exit();
 
                         break;
 
@@ -425,13 +527,20 @@ namespace Grand_Azure_Hotel_System
             }
         }
 
-        // Display hotel statistics
+        //-----------------Display hotel statistics-----------------//
         public void DisplayStatistics()
         {
+            int totalRooms = rooms.Count;
+            int bookedRooms = bookings.Count;
+            int availableRooms = totalRooms - bookedRooms;
+
+            Console.WriteLine("================Hotel Statistics====================");
             Console.WriteLine("Hotel Name: " + HotelName);
             Console.WriteLine("Total Guests: " + guests.Count);
-            Console.WriteLine("Total Rooms: " + rooms.Count);
-            Console.WriteLine("Total Bookings: " + bookings.Count);
+            Console.WriteLine("Total Rooms: " + totalRooms);
+            Console.WriteLine("Total Bookings: " + bookedRooms);
+            Console.WriteLine("Available Rooms: " + availableRooms);
+            Console.WriteLine("====================================================");
         }
 
     }
