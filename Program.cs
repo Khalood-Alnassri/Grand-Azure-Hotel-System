@@ -244,6 +244,40 @@ namespace Grand_Azure_Hotel_System
         Room room;
         Guest guest;
 
+        // property to get-only booking ID
+        public int GetBookingID()
+        {
+            return bookingID;
+        }
+
+        // property to get-only guest
+        public Guest GetGuest()
+        {
+            return guest;
+        }
+
+        // property to get-only room
+        public Room GetRoom()
+        {
+            return room;
+        }
+
+        // constructor to add new booking
+        public Booking(Room room, Guest guest)
+        {
+            this.room = room;
+            this.guest = guest;
+            bookingID = ++nextBookingID; // generate unique booking ID
+        }
+
+        // method to display booking information
+        public void DisplayInfo()
+        {
+            Console.WriteLine("Booking ID: " + bookingID);
+            Console.WriteLine("Guest Name: " + guest.GetName());
+            Console.WriteLine("Room Number: " + room.GetRoomNumber());
+        }
+
     }
 
 
@@ -329,5 +363,76 @@ namespace Grand_Azure_Hotel_System
                 }
             }
         }
+
+        //-------------Booking Methods------------//
+
+        // book a room
+        public void BookRoom(int roomNumber, string guestID)
+        {
+            Room room = rooms.Find(r => r.GetRoomNumber() == roomNumber); // find the room by room number
+            Guest guest = guests.Find(g => g.GetNationalID() == guestID); // find the guest by national ID
+
+            if (room == null)
+            {
+                Console.WriteLine("The room does not exist.");
+                return;
+            }
+            if (guest == null)
+            {
+                Console.WriteLine("The guest does not exist.");
+                return;
+            }
+            if (room.Book())
+            {
+                bookings.Add(new Booking(room, guest)); // add new booking to the list of bookings
+            }
+        }
+
+        // cancel a booking
+        public void CancelBooking(int bookingID)
+        {
+            Booking booking = bookings.Find(b => b.GetBookingID() == bookingID); // find the booking by booking ID
+
+            if (booking == null)
+            {
+                Console.WriteLine("The booking does not exist.");
+                return;
+            }
+
+            booking.GetRoom().CancelBooking(); // cancel the booking of the room
+            bookings.Remove(booking); // remove the booking from the list
+        }
+
+        // search guest booking by national ID
+        public void SearchGuestBooking(string guestID)
+        {
+            Guest guest = guests.Find(g => g.GetNationalID() == guestID); // find the guest by national ID
+
+            if (guest == null)
+            {
+                Console.WriteLine("The guest does not exist.");
+                return;
+            }
+
+            Console.WriteLine("Bookings for Guest: " + guest.GetName());
+
+            foreach (Booking booking in bookings)
+            {
+                if (booking.GetGuest().GetNationalID() == guestID)
+                {
+                    booking.DisplayInfo();
+                }
+            }
+        }
+
+        // Display hotel statistics
+        public void DisplayStatistics()
+        {
+            Console.WriteLine("Hotel Name: " + HotelName);
+            Console.WriteLine("Total Guests: " + guests.Count);
+            Console.WriteLine("Total Rooms: " + rooms.Count);
+            Console.WriteLine("Total Bookings: " + bookings.Count);
+        }
+
     }
 }
