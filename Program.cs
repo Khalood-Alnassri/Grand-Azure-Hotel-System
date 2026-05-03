@@ -28,7 +28,7 @@ namespace Grand_Azure_Hotel_System
         {
             int option;
 
-            while(true)
+            while (true)
             {
                 Console.Write("Choose option you need: ");
                 string input = Console.ReadLine() ?? string.Empty;
@@ -55,17 +55,17 @@ namespace Grand_Azure_Hotel_System
             hotil.AddGuest(name, id);
         }
 
-     
+
         static void Main(string[] args)
-        { 
+        {
             bool exit = false;
             while (!exit)
             {
                 DisplayMenu();
 
                 int option = ChooseOption();
-                 switch (option)
-                 { 
+                switch (option)
+                {
                     case 1:
 
                         AddGuest();
@@ -94,7 +94,7 @@ namespace Grand_Azure_Hotel_System
                         break;
 
                     case 9:
-                      
+
                         break;
 
                     default:
@@ -103,7 +103,7 @@ namespace Grand_Azure_Hotel_System
 
                         break;
 
-                 }
+                }
 
                 Console.WriteLine("Press any key to continue....");
                 Console.ReadKey();
@@ -149,14 +149,14 @@ namespace Grand_Azure_Hotel_System
         // method to count total guest created
         public static int getTotalGuestsCreated()
         {
-            return totalGuestsCreated; 
+            return totalGuestsCreated;
         }
 
-        // const to add new guest
+        // constructor to add new guest
         public Guest(string name, string ID)
         {
-            this.fullName = name;
-            this.nationalID = ID;
+            SetName(name); // set name by using property
+            nationalID = ID;
             totalGuestsCreated++;
         }
 
@@ -165,8 +165,6 @@ namespace Grand_Azure_Hotel_System
         {
             Console.WriteLine("Guest name: " + fullName + " | " + "National ID: " + nationalID);
         }
-
-
     }
 
     class Room
@@ -175,18 +173,76 @@ namespace Grand_Azure_Hotel_System
         string roomType;
         bool isBooked;
 
-    
+        // Property to get-only room number
+        public int GetRoomNumber()
+        {
+            return roomNumber;
+        }
 
+        // Property to get-only room type
+        public string GetRoomType()
+        {
+            return roomType;
+        }
 
+        // Property to get-only romm is booked
+        public bool GetIsBooked()
+        {
+            return isBooked;
+        }
 
+        // constructor to add new room 
+        public Room(int number, string type)
+        {
+            roomNumber = number;
+            roomType = type;
+            isBooked = false;
+        }
+
+        // method to booked room
+        public bool Book()
+        {
+            if (isBooked == true) // is room booked? == true
+            {
+                Console.WriteLine("The already booked.");
+                return false; // room book is fail
+            }
+
+            else // is room booked? == false / not booked
+            {
+                Console.WriteLine("The room booked successful."); // book the room
+                isBooked = true; // make it true
+                return true; // room book 
+            }
+        }
+
+        // method to cancel booking
+        public void CancelBooking()
+        {
+            if (isBooked == false) // is room booked? == false / not booked
+            {
+                Console.WriteLine("The room is not booked yet.");
+            }
+            else // is room booked? == true
+            {
+                Console.WriteLine("The booking canceled successful."); // cancel the booking
+                isBooked = false; // make it false
+            }
+        }
+
+        // method to display room information
+        public void DisplayInfo()
+        {
+            string status = isBooked ? "Booked" : "Available"; // if isBooked == true => status = "Booked" / if isBooked == false => status = "Available"
+            Console.WriteLine("Room number: " + roomNumber + " | " + "Room type: " + roomType + " | " + "Status: " + status);
+        }
     }
-
     class Booking
     {
-        static int bookingID;
-        static int nextBookingID;
-        static Room room;
-        static Guest guest;
+        int bookingID;
+        int nextBookingID;
+        Room room;
+        Guest guest;
 
     }
 
@@ -207,13 +263,14 @@ namespace Grand_Azure_Hotel_System
             bookings = new List<Booking>();
         }
 
-        //Guest Methods//
+        //-------------Guest Methods--------------//
+
         // add new guest
         public void AddGuest(string name, string id)
         {
             foreach (Guest guest in guests)
             {
-                if(guest.GetNationalID() == id)
+                if (guest.GetNationalID() == id)
                 {
                     Console.WriteLine("The guest is already exist.");
                     return;
@@ -230,6 +287,47 @@ namespace Grand_Azure_Hotel_System
         }
 
 
+        //--------------Room Methods-------------//
 
+        // add new room
+        public void AddRoom(int number, string type)
+        {
+            foreach (Room room in rooms)
+            {
+                if (room.GetRoomNumber() == number)
+                {
+                    Console.WriteLine("The room is already exist.");
+                    return;
+                }
+            }
+            rooms.Add(new Room(number, type));
+        }
+
+        //Display available rooms
+        public void DisplayAvailableRooms()
+        {
+            Console.WriteLine("Available Rooms:");
+            foreach (Room room in rooms)
+            {
+                if (!room.GetIsBooked())
+                {
+                    room.DisplayInfo();
+                }
+            }
+
+        }
+
+        //Display booked rooms
+        public void DisplayBookedRooms()
+        {
+            Console.WriteLine("Booked Rooms:");
+            foreach (Room room in rooms)
+            {
+                if (room.GetIsBooked())
+                {
+                    room.DisplayInfo();
+                }
+            }
+        }
     }
 }
