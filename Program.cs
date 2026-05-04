@@ -225,9 +225,9 @@ namespace Grand_Azure_Hotel_System
         // Property to set name
         public void SetName(string guest)
         {
-            if (guest.IsWhiteSpace())
+            if (string.IsNullOrWhiteSpace(guest) || guest.Trim().Length < 3)
             {
-                Console.WriteLine("Please enter a valid name!");
+                Console.WriteLine("Name must be at least 3 chars.!");
             }
 
             else
@@ -260,6 +260,7 @@ namespace Grand_Azure_Hotel_System
             SetName(name); // set name by using property
             nationalID = ID;
             totalGuestsCreated++;
+            Console.WriteLine("Guest added successfully.");
         }
 
         // method to display guest information
@@ -412,7 +413,6 @@ namespace Grand_Azure_Hotel_System
                     return;
                 }
             }
-
             guests.Add(new Guest(name, id));
         }
 
