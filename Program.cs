@@ -21,8 +21,9 @@ namespace Grand_Azure_Hotel_System
             Console.WriteLine("6. Display Booked Rooms.");
             Console.WriteLine("7. Search Guest by National ID.");
             Console.WriteLine("8. Show Hotel Statistics.");
-            Console.WriteLine("9. Exit.");
-            Console.WriteLine("10. Display Available Rooms by types.");
+            Console.WriteLine("9. Display Available Rooms by types.");
+            Console.WriteLine("10. Display All Guests.");
+            Console.WriteLine("0. Exit.");
             Console.WriteLine("====================================");
         }
 
@@ -55,7 +56,6 @@ namespace Grand_Azure_Hotel_System
             string id = Console.ReadLine();
 
             hotil.AddGuest(name, id);
-            Console.WriteLine("Guest added successfully.");
         }
 
         // case 2: function to add new room
@@ -126,7 +126,7 @@ namespace Grand_Azure_Hotel_System
             hotil.DisplayStatistics();
         }
 
-        // case 9: function to exit the program
+        // case 0: function to exit the program
         public static bool Exit()
         {
             Console.WriteLine("Are you sure you want to exit? (yes/no): ");
@@ -146,12 +146,19 @@ namespace Grand_Azure_Hotel_System
             }
         }
 
+        // case 9: function to display available rooms by types
         public static void DisplayAvailableRoomsByTypes()
         {
             Console.WriteLine("Enter room type to filter (Standard, Deluxe, Suite): ");
             string type = (Console.ReadLine() ?? string.Empty).Trim().ToLower();
 
             hotil.DisplayAvailableRoomsByTypes(type);
+        }
+
+        // case 10: function to display all guests
+        public static void DisplayAllGuests()
+        {
+            hotil.DisplayAllGuests();
         }
 
         static void Main(string[] args)
@@ -214,15 +221,21 @@ namespace Grand_Azure_Hotel_System
 
                     case 9:
 
-                        exit = Exit();
+                        DisplayAvailableRoomsByTypes();
 
                         break;
 
                     case 10:
 
-                        DisplayAvailableRoomsByTypes();
+                        DisplayAllGuests();
 
-                       break;
+                        break;
+
+                    case 0:
+
+                        exit = Exit();
+
+                        break;
 
                     default:
 
@@ -638,6 +651,22 @@ namespace Grand_Azure_Hotel_System
             }
 
             Console.WriteLine("No available " + type + " rooms are found.");
+        }
+
+        //-------------------------display all guests--------------------------
+        public void DisplayAllGuests()
+        {
+            Console.WriteLine("All Guests: ");
+            foreach (Guest guest in guests)
+            {
+                guest.DisplayInfo();
+            }
+
+            if (guests.Count == 0)
+                Console.WriteLine("No guests are found.");
+            
+            else
+            Console.WriteLine("Total registered guests: " + guests.Count);
         }
     }
 }
