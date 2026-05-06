@@ -65,7 +65,10 @@ namespace Grand_Azure_Hotel_System
             Console.WriteLine("Enter room type: ");
             string type = (Console.ReadLine() ?? string.Empty).Trim().ToLower();
 
-            hotil.AddRoom(number, type);
+            Console.WriteLine("Enter nightly rate: ");
+            decimal num = decimal.Parse(Console.ReadLine() ?? string.Empty);
+
+            hotil.AddRoom(number, type, num);
             Console.WriteLine("Room added successfully.");
         }
 
@@ -78,7 +81,10 @@ namespace Grand_Azure_Hotel_System
             Console.WriteLine("Enter guest national ID: ");
             string guestID = Console.ReadLine();
 
-            hotil.BookRoom(roomNumber, guestID);
+            Console.WriteLine("Enter number of nights: ");
+            int num = int.Parse(Console.ReadLine() ?? string.Empty);
+
+            hotil.BookRoom(roomNumber, guestID, num);
             Console.WriteLine("Room booked successfully.");
         }
 
@@ -278,6 +284,7 @@ namespace Grand_Azure_Hotel_System
         int roomNumber;
         string roomType;
         bool isBooked;
+        decimal NightlyRate;
 
         // Property to get-only room number
         public int GetRoomNumber()
@@ -292,11 +299,9 @@ namespace Grand_Azure_Hotel_System
         }
 
         // Property to get-only romm is booked
-        public bool GetIsBooked()
-        {
-            return isBooked;
-        }
+        public bool GetIsBooked { get; }
 
+        // property to set room type
         public void SetRoomType(string type)
         {
 
@@ -320,12 +325,16 @@ namespace Grand_Azure_Hotel_System
             }
         }
 
+        // property to get-only nightly rate
+        public decimal GetNightlyRate { get; }
+
         // constructor to add new room 
-        public Room(int number, string type)
+        public Room(int number, string type, decimal nightRate)
         {
             roomNumber = number;
             SetRoomType(type);
             isBooked = false;
+            NightlyRate = nightRate;
         }
 
         // method to booked room
@@ -372,30 +381,36 @@ namespace Grand_Azure_Hotel_System
         int nextBookingID;
         Room room;
         Guest guest;
+        int Nights;
+        decimal TotalCost;
 
         // property to get-only booking ID
-        public int GetBookingID()
-        {
-            return bookingID;
-        }
+        public int GetBookingID { get; }
 
         // property to get-only guest
-        public Guest GetGuest()
-        {
-            return guest;
-        }
+        public Guest GetGuest { get; }
 
         // property to get-only room
-        public Room GetRoom()
+        public Room GetRoom { get; }
+ 
+        // property to get-only number of nights
+        public int GetNights { get; }
+
+        // property to get-only total cost
+        public decimal GetTotalCost()
         {
-            return room;
-        }
+            return TotalCost;
+        }   
 
         // constructor to add new booking
-        public Booking(Room room, Guest guest)
+        public Booking(Room room, Guest guest, int night)
         {
             this.room = room;
             this.guest = guest;
+            this.Nights = night;
+
+            TotalCost = room.GetNightlyRate * night; // calculate total cost by multiplying nightly rate by number of nights
+
             bookingID = ++nextBookingID; // generate unique booking ID
         }
 
@@ -405,6 +420,8 @@ namespace Grand_Azure_Hotel_System
             Console.WriteLine("Booking ID: " + bookingID);
             Console.WriteLine("Guest Name: " + guest.GetName());
             Console.WriteLine("Room Number: " + room.GetRoomNumber());
+            Console.WriteLine("Nights: " + Nights);
+            Console.WriteLine("Total Cost: " + TotalCost);
         }
 
     }
@@ -452,7 +469,7 @@ namespace Grand_Azure_Hotel_System
         //--------------Room Methods-------------//
 
         // add new room
-        public void AddRoom(int number, string type)
+        public void AddRoom(int number, string type, decimal num)
         {
             foreach (Room room in rooms)
             {
@@ -462,7 +479,7 @@ namespace Grand_Azure_Hotel_System
                     return;
                 }
             }
-            rooms.Add(new Room(number, type));
+            rooms.Add(new Room(number, type, num));
         }
 
         //Display available rooms
@@ -471,7 +488,7 @@ namespace Grand_Azure_Hotel_System
             Console.WriteLine("Available Rooms:");
             foreach (Room room in rooms)
             {
-                if (!room.GetIsBooked())
+                if (!room.GetIsBooked)
                 {
                     room.DisplayInfo();
                 }
@@ -485,7 +502,7 @@ namespace Grand_Azure_Hotel_System
             Console.WriteLine("Booked Rooms:");
             foreach (Room room in rooms)
             {
-                if (room.GetIsBooked())
+                if (room.GetIsBooked)
                 {
                     room.DisplayInfo();
                 }
@@ -495,7 +512,7 @@ namespace Grand_Azure_Hotel_System
         //-------------Booking Methods------------//
 
         // book a room
-        public void BookRoom(int roomNumber, string guestID)
+        public void BookRoom(int roomNumber, string guestID, int num )
         {
             Room room = rooms.Find(r => r.GetRoomNumber() == roomNumber); // find the room by room number
             Guest guest = guests.Find(g => g.GetNationalID() == guestID); // find the guest by national ID
@@ -512,14 +529,14 @@ namespace Grand_Azure_Hotel_System
             }
             if (room.Book())
             {
-                bookings.Add(new Booking(room, guest)); // add new booking to the list of bookings
+                bookings.Add(new Booking(room, guest, num)); // add new booking to the list of bookings
             }
         }
 
         // cancel a booking
         public void CancelBooking(int bookingID)
         {
-            Booking booking = bookings.Find(b => b.GetBookingID() == bookingID); // find the booking by booking ID
+            Booking booking = bookings.Find(b => b.GetBookingID == bookingID); // find the booking by booking ID
 
             if (booking == null)
             {
@@ -527,7 +544,7 @@ namespace Grand_Azure_Hotel_System
                 return;
             }
 
-            booking.GetRoom().CancelBooking(); // cancel the booking of the room
+            booking.GetRoom.CancelBooking(); // cancel the booking of the room
             bookings.Remove(booking); // remove the booking from the list
         }
 
@@ -546,7 +563,7 @@ namespace Grand_Azure_Hotel_System
 
             foreach (Booking booking in bookings)
             {
-                if (booking.GetGuest().GetNationalID() == guestID)
+                if (booking.GetGuest.GetNationalID() == guestID)
                 {
                     booking.DisplayInfo();
                 }
