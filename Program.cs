@@ -21,8 +21,9 @@ namespace Grand_Azure_Hotel_System
             Console.WriteLine("6. Display Booked Rooms.");
             Console.WriteLine("7. Search Guest by National ID.");
             Console.WriteLine("8. Show Hotel Statistics.");
-            Console.WriteLine("9. Display Available Rooms by types.");
+            Console.WriteLine("9. Filter Rooms by Type.");
             Console.WriteLine("10. Display All Guests.");
+            Console.WriteLine("11. Most Expensive Booking");
             Console.WriteLine("0. Exit.");
             Console.WriteLine("====================================");
         }
@@ -36,13 +37,13 @@ namespace Grand_Azure_Hotel_System
                 Console.Write("Choose option you need: ");
                 string input = Console.ReadLine() ?? string.Empty;
 
-                if (int.TryParse(input, out option) && option >= 1 && option <= 10)
+                if (int.TryParse(input, out option) && option >= 1 && option <= 11)
                 {
                     return option;
                 }
                 else
                 {
-                    Console.WriteLine("Invalid input. Please enter a number between 1 and 10.");
+                    Console.WriteLine("Invalid input. Please enter a number between 1 and 11.");
                 }
             }
         }
@@ -71,7 +72,6 @@ namespace Grand_Azure_Hotel_System
             decimal num = decimal.Parse(Console.ReadLine() ?? string.Empty);
 
             hotil.AddRoom(number, type, num);
-            Console.WriteLine("Room added successfully.");
         }
 
         // case 3: function to book a room
@@ -87,7 +87,6 @@ namespace Grand_Azure_Hotel_System
             int num = int.Parse(Console.ReadLine() ?? string.Empty);
 
             hotil.BookRoom(roomNumber, guestID, num);
-            Console.WriteLine("Room booked successfully.");
         }
 
         // case 4: function to cancel a booking
@@ -146,8 +145,8 @@ namespace Grand_Azure_Hotel_System
             }
         }
 
-        // case 9: function to display available rooms by types
-        public static void DisplayAvailableRoomsByTypes()
+        // case 9: function to Filter Rooms by Type
+        public static void FilterRoomsByType()
         {
             Console.WriteLine("Enter room type to filter (Standard, Deluxe, Suite): ");
             string type = (Console.ReadLine() ?? string.Empty).Trim().ToLower();
@@ -159,6 +158,12 @@ namespace Grand_Azure_Hotel_System
         public static void DisplayAllGuests()
         {
             hotil.DisplayAllGuests();
+        }
+
+        // case 11: function to display the most expensive booking
+        public static void MostExpensiveBooking()
+        {
+            hotil.DisplayMostExpensiveBooking();
         }
 
         static void Main(string[] args)
@@ -221,7 +226,7 @@ namespace Grand_Azure_Hotel_System
 
                     case 9:
 
-                        DisplayAvailableRoomsByTypes();
+                        FilterRoomsByType();
 
                         break;
 
@@ -231,6 +236,11 @@ namespace Grand_Azure_Hotel_System
 
                         break;
 
+                    case 11:
+
+                        MostExpensiveBooking();
+                          
+                        break;
                     case 0:
 
                         exit = Exit();
@@ -664,9 +674,40 @@ namespace Grand_Azure_Hotel_System
 
             if (guests.Count == 0)
                 Console.WriteLine("No guests are found.");
-            
+
             else
-            Console.WriteLine("Total registered guests: " + guests.Count);
+                Console.WriteLine("Total registered guests: " + guests.Count);
         }
+
+        //-------------------------display the most expensive booking--------------------------
+        public void DisplayMostExpensiveBooking()
+        {
+            if (bookings.Count == 0)
+            {
+                Console.WriteLine("No bookings found.");
+                return;
+            }
+
+            Booking max = null;
+            foreach (Booking booking in bookings)
+            {
+                if (max == null || booking.GetTotalCost() > max.GetTotalCost())
+                {
+                    max = booking;
+                }
+            }
+
+            if (max != null)
+            {
+                Console.WriteLine("Most Expensive Booking: ");
+                max.DisplayInfo();
+            }
+
+            else
+            {
+                Console.WriteLine("No active bookings");
+            }
+        }
+
     }
 }
