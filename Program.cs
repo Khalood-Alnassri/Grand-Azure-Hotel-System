@@ -421,7 +421,7 @@ namespace Grand_Azure_Hotel_System
             Console.WriteLine("Guest Name: " + guest.GetName());
             Console.WriteLine("Room Number: " + room.GetRoomNumber());
             Console.WriteLine("Nights: " + Nights);
-            Console.WriteLine("Total Cost: " + TotalCost);
+            Console.WriteLine("Total Cost: " + TotalCost + "OMR");
         }
 
     }
@@ -543,6 +543,10 @@ namespace Grand_Azure_Hotel_System
                 Console.WriteLine("The booking does not exist.");
                 return;
             }
+
+            Console.WriteLine("Guest: " + booking.GetGuest.GetName);
+            Console.WriteLine("Room Number: " + booking.GetRoom.GetRoomNumber + ", " + "Nights: " + booking.GetNights);
+            Console.WriteLine("Cost: " + booking.GetTotalCost() + "OMR");
 
             booking.GetRoom.CancelBooking(); // cancel the booking of the room
             bookings.Remove(booking); // remove the booking from the list
