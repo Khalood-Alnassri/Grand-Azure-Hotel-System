@@ -24,6 +24,7 @@ namespace Grand_Azure_Hotel_System
             Console.WriteLine("9. Filter Rooms by Type.");
             Console.WriteLine("10. Display All Guests.");
             Console.WriteLine("11. Most Expensive Booking");
+            Console.WriteLine("12. Guest Lifetime Bookings.");
             Console.WriteLine("0. Exit.");
             Console.WriteLine("====================================");
         }
@@ -37,13 +38,13 @@ namespace Grand_Azure_Hotel_System
                 Console.Write("Choose option you need: ");
                 string input = Console.ReadLine() ?? string.Empty;
 
-                if (int.TryParse(input, out option) && option >= 1 && option <= 11)
+                if (int.TryParse(input, out option) && option >= 1 && option <= 12)
                 {
                     return option;
                 }
                 else
                 {
-                    Console.WriteLine("Invalid input. Please enter a number between 1 and 11.");
+                    Console.WriteLine("Invalid input. Please enter a number between 1 and 12.");
                 }
             }
         }
@@ -166,6 +167,14 @@ namespace Grand_Azure_Hotel_System
             hotil.DisplayMostExpensiveBooking();
         }
 
+        // case 12: function to display the total bookings made by a guest
+        public static void GuestLifetimeBookings()
+        {
+            Console.WriteLine("Enter guest national ID: ");
+            string guestID = Console.ReadLine();
+
+            hotil.DisplayGuestLifetimeBookings(guestID);
+        }
         static void Main(string[] args)
         {
             bool exit = false;
@@ -241,6 +250,13 @@ namespace Grand_Azure_Hotel_System
                         MostExpensiveBooking();
                           
                         break;
+
+                    case 12:
+
+                        GuestLifetimeBookings();
+
+                        break;
+
                     case 0:
 
                         exit = Exit();
@@ -270,6 +286,8 @@ namespace Grand_Azure_Hotel_System
 
         private static int totalGuestsCreated = 0;
 
+        int totalBookingsMade = 0;
+
         // Property to set name
         public void SetName(string guest)
         {
@@ -296,6 +314,9 @@ namespace Grand_Azure_Hotel_System
             return nationalID;
         }
 
+        // property to get-only total bookings made
+        public int GetTotalBookingsMade { get; }
+
         // method to count total guest created
         public static int getTotalGuestsCreated()
         {
@@ -316,6 +337,12 @@ namespace Grand_Azure_Hotel_System
         {
             Console.WriteLine("Guest name: " + fullName + " | " + "National ID: " + nationalID);
         }
+
+        public void IncrementBookingCount()
+        {
+            totalBookingsMade++;
+        }
+
     }
 
     class Room
@@ -569,6 +596,7 @@ namespace Grand_Azure_Hotel_System
             if (room.Book())
             {
                 bookings.Add(new Booking(room, guest, num)); // add new booking to the list of bookings
+                guest.IncrementBookingCount(); // increment the total bookings made by the guest
             }
         }
 
@@ -709,5 +737,18 @@ namespace Grand_Azure_Hotel_System
             }
         }
 
+        //-------------------------display the total bookings made by a guest--------------------------
+        public void DisplayGuestLifetimeBookings(string guestID)
+        {
+            Guest guest = guests.Find(g => g.GetNationalID() == guestID); // find the guest by national ID
+            if (guest == null)
+            {
+                Console.WriteLine("The guest does not exist.");
+                return;
+            }
+
+            guest.DisplayInfo();
+            Console.WriteLine("Total bookings ever made:  " + guest.GetTotalBookingsMade);
+        }
     }
 }
