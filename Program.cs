@@ -21,7 +21,8 @@ namespace Grand_Azure_Hotel_System
             Console.WriteLine("6. Display Booked Rooms.");
             Console.WriteLine("7. Search Guest by National ID.");
             Console.WriteLine("8. Show Hotel Statistics.");
-            Console.WriteLine("9. Exit");
+            Console.WriteLine("9. Exit.");
+            Console.WriteLine("10. Display Available Rooms by types.");
             Console.WriteLine("====================================");
         }
 
@@ -34,13 +35,13 @@ namespace Grand_Azure_Hotel_System
                 Console.Write("Choose option you need: ");
                 string input = Console.ReadLine() ?? string.Empty;
 
-                if (int.TryParse(input, out option) && option >= 1 && option <= 9)
+                if (int.TryParse(input, out option) && option >= 1 && option <= 10)
                 {
                     return option;
                 }
                 else
                 {
-                    Console.WriteLine("Invalid input. Please enter a number between 1 and 9.");
+                    Console.WriteLine("Invalid input. Please enter a number between 1 and 10.");
                 }
             }
         }
@@ -145,6 +146,14 @@ namespace Grand_Azure_Hotel_System
             }
         }
 
+        public static void DisplayAvailableRoomsByTypes()
+        {
+            Console.WriteLine("Enter room type to filter (Standard, Deluxe, Suite): ");
+            string type = (Console.ReadLine() ?? string.Empty).Trim().ToLower();
+
+            hotil.DisplayAvailableRoomsByTypes(type);
+        }
+
         static void Main(string[] args)
         {
             bool exit = false;
@@ -208,6 +217,12 @@ namespace Grand_Azure_Hotel_System
                         exit = Exit();
 
                         break;
+
+                    case 10:
+
+                        DisplayAvailableRoomsByTypes();
+
+                       break;
 
                     default:
 
@@ -393,7 +408,7 @@ namespace Grand_Azure_Hotel_System
 
         // property to get-only room
         public Room GetRoom { get; }
- 
+
         // property to get-only number of nights
         public int GetNights { get; }
 
@@ -401,7 +416,7 @@ namespace Grand_Azure_Hotel_System
         public decimal GetTotalCost()
         {
             return TotalCost;
-        }   
+        }
 
         // constructor to add new booking
         public Booking(Room room, Guest guest, int night)
@@ -513,7 +528,7 @@ namespace Grand_Azure_Hotel_System
         //-------------Booking Methods------------//
 
         // book a room
-        public void BookRoom(int roomNumber, string guestID, int num )
+        public void BookRoom(int roomNumber, string guestID, int num)
         {
             Room room = rooms.Find(r => r.GetRoomNumber() == roomNumber); // find the room by room number
             Guest guest = guests.Find(g => g.GetNationalID() == guestID); // find the guest by national ID
@@ -606,9 +621,23 @@ namespace Grand_Azure_Hotel_System
             Console.WriteLine("Total Bookings: " + bookedRooms);
             Console.WriteLine("Available Rooms: " + availableRooms);
             Console.WriteLine("Total Revenue: " + totalCosts.ToString("F3") + "OMR");
-            console.WriteLine("Average Revenue per Booking: " + average.ToString("F3") + "OMR");
+            Console.WriteLine("Average Revenue per Booking: " + average.ToString("F3") + "OMR");
             Console.WriteLine("====================================================");
         }
 
+        //------------------------display available rooms by types--------------------------
+        public void DisplayAvailableRoomsByTypes(string type)
+        {
+            Console.WriteLine("Available " + type + " Rooms:");
+            foreach (Room room in rooms)
+            {
+                if (!room.GetIsBooked && string.Equals(room.GetRoomType(), type, StringComparison.OrdinalIgnoreCase))
+                {
+                    room.DisplayInfo();
+                }
+            }
+
+            Console.WriteLine("No available " + type + " rooms are found.");
+        }
     }
 }
