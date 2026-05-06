@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace Grand_Azure_Hotel_System
@@ -421,7 +422,7 @@ namespace Grand_Azure_Hotel_System
             Console.WriteLine("Guest Name: " + guest.GetName());
             Console.WriteLine("Room Number: " + room.GetRoomNumber());
             Console.WriteLine("Nights: " + Nights);
-            Console.WriteLine("Total Cost: " + TotalCost + "OMR");
+            Console.WriteLine("Total Cost: " + TotalCost.ToString("F3") + "OMR");
         }
 
     }
@@ -546,7 +547,7 @@ namespace Grand_Azure_Hotel_System
 
             Console.WriteLine("Guest: " + booking.GetGuest.GetName);
             Console.WriteLine("Room Number: " + booking.GetRoom.GetRoomNumber + ", " + "Nights: " + booking.GetNights);
-            Console.WriteLine("Cost: " + booking.GetTotalCost() + "OMR");
+            Console.WriteLine("Cost: " + booking.GetTotalCost().ToString("F3") + "OMR");
 
             booking.GetRoom.CancelBooking(); // cancel the booking of the room
             bookings.Remove(booking); // remove the booking from the list
@@ -581,12 +582,31 @@ namespace Grand_Azure_Hotel_System
             int bookedRooms = bookings.Count;
             int availableRooms = totalRooms - bookedRooms;
 
+            if (bookings.Count == 0) // if there is no booking, display message and return
+            {
+                Console.WriteLine("No bookings found. Total cost is 0 OMR.");
+                return;
+            }
+
+            // calculate total costs by summing the total cost of all bookings
+            decimal totalCosts = 0;
+            foreach (Booking booking in bookings)
+            {
+                totalCosts += booking.GetTotalCost();
+            }
+
+            // calculate average revenue per booking by dividing total costs by number of bookings
+            decimal average = totalCosts / bookings.Count;
+
+
             Console.WriteLine("================Hotel Statistics====================");
             Console.WriteLine("Hotel Name: " + HotelName);
             Console.WriteLine("Total Guests: " + guests.Count);
             Console.WriteLine("Total Rooms: " + totalRooms);
             Console.WriteLine("Total Bookings: " + bookedRooms);
             Console.WriteLine("Available Rooms: " + availableRooms);
+            Console.WriteLine("Total Revenue: " + totalCosts.ToString("F3") + "OMR");
+            console.WriteLine("Average Revenue per Booking: " + average.ToString("F3") + "OMR");
             Console.WriteLine("====================================================");
         }
 
