@@ -53,6 +53,7 @@ namespace Grand_Azure_Hotel_System
             string id = Console.ReadLine();
 
             hotil.AddGuest(name, id);
+            Console.WriteLine("Guest added successfully.");
         }
 
         // case 2: function to add new room
@@ -62,9 +63,10 @@ namespace Grand_Azure_Hotel_System
             int number = int.Parse(Console.ReadLine() ?? string.Empty);
 
             Console.WriteLine("Enter room type: ");
-            string type = Console.ReadLine();
+            string type = (Console.ReadLine() ?? string.Empty).Trim().ToLower();
 
             hotil.AddRoom(number, type);
+            Console.WriteLine("Room added successfully.");
         }
 
         // case 3: function to book a room
@@ -77,6 +79,7 @@ namespace Grand_Azure_Hotel_System
             string guestID = Console.ReadLine();
 
             hotil.BookRoom(roomNumber, guestID);
+            Console.WriteLine("Room booked successfully.");
         }
 
         // case 4: function to cancel a booking
@@ -294,11 +297,34 @@ namespace Grand_Azure_Hotel_System
             return isBooked;
         }
 
+        public void SetRoomType(string type)
+        {
+
+            if (type == "standard")
+            {
+                roomType = "Standard";
+            }
+
+            else if (type == "deluxe")
+            {
+                roomType = "Deluxe";
+            }
+
+            else if (type == "suite")
+            {
+                roomType = "Suite";
+            }
+            else
+            {
+                Console.WriteLine("Invalid room type. Please enter 'Standard', 'Deluxe', or 'Suite'.");
+            }
+        }
+
         // constructor to add new room 
         public Room(int number, string type)
         {
             roomNumber = number;
-            roomType = type;
+            SetRoomType(type);
             isBooked = false;
         }
 
